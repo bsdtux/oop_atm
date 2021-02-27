@@ -1,7 +1,7 @@
-from atm import ATM, InvalidChoice
+from cli import ATM
+from cli.exceptions import InvalidSelection
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     atm = ATM()
 
     while True:
@@ -12,10 +12,8 @@ if __name__ == '__main__':
         try:
             choice = int(choice)
 
-            if choice == 6:
+            if atm.quit == choice:
                 break
             atm.choice(choice)
-        except (ValueError, InvalidChoice):
-            print('Invalid selection, please try again...\n\n\n')
-
-       
+        except (ValueError, InvalidSelection):
+            print("Invalid selection, please try again...\n\n\n")

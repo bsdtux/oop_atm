@@ -1,48 +1,42 @@
-import typing as ty
+from dataclasses import dataclass
 from decimal import Decimal
-from .exceptions import InsufficientFunds
+
 from .utils import currency
 
-Acct = ty.TypeVar('Acct')
 
-class Account(ty.Generic[Acct]):
-    """Base Account Class"""
-    def __init__(self, acc_type: str, amount: str):
-        self.account_type = acc_type
-        self.amount = currency(amount)
-
-    def deposit(self, amount: str) -> Decimal:
-        self.amount += currency(amount)
-        return self.amount
-    
-    def withdraw(self, amount: str) -> Decimal:
-        amount = currency(amount)
-
-        if amount > self.amount:
-            raise InsufficientFunds(f'Funds not available to withdraw {amount}')
-        
-        self.amount -= amount
-        return self.amount
-    
-    def balance(self) -> Decimal:
-        return self.amount
-    
-    def transfer_funds(self, amount: str, account: Acct) -> Acct:
-        amount = currency(amount)
-        self.withdraw(amount)
-        account.deposit(amount)
-
-        return account
+@dataclass
+class Account:
+    id: int = 0
+    description: str = ""
+    amount: currency = currency(0.00)
 
 
-class SavingsAccount(Account):
-    """Representation of a Savings Account"""
-    def __init__(self, amount):
-        super(SavingsAccount, self).__init__('savings', amount)
+@dataclass
+class Savings(Account):
+    description: str = "Savings"
 
 
-class CheckingAccount(Account):
-    """Representation of a Checking Account"""
-    def __init__(self, amount):
-        super(CheckingAccount, self).__init__('checking', amount)
-    
+@dataclass
+class Checking(Account):
+    description: str = "Checking"
+
+
+mock_records = {
+    1: Savings(id=1, amount=currency("1000.00")),
+    2: Checking(id=2, amount=currency("1000.00")),
+    3: Checking(id=3, amount=currency("750.00")),
+}
+
+
+class Model:
+    def __init__(self):
+        self.database = mock_records
+
+    def get_account_by_id(self, account_id):
+        return mock_records.get(account_id)
+
+    def get_accounts(self):
+        return self.database
+
+    def update_account(self, account_id, account):
+        mock_records[account_id] = account
