@@ -3,3 +3,6 @@ test:
 
 start:
 	pipenv run python run_atm.py
+
+start_api:
+	pipenv run uvicorn api.main:app --reload

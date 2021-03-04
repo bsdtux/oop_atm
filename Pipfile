@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pytest-coverage = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 pytest = "*"
